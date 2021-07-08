@@ -104,20 +104,17 @@ void Array::select_sort() {
 
 //"insert_sort" function: Do insertion sorting on the array
 void Array::insert_sort() {
-    int temp;
-    //i: sorted element's index, j: unsorted element's index
-    for(int j=1; j<size; j++) {
-        for(int i=0; i<j; i++) {
-            //Do insertion
-            if(value[i] > value[j]) {
-                temp = value[j];
-                for(int k=j-1; k>=i; k--) {
-                    value[k+1] = value[k];
-                }
-                value[i] = temp;
-                break;
-            }
+    int j, temp;
+    //i: unsorted element's index, j: sorted element's index
+    for(int i=1; i<size; i++) {
+        temp = value[i];
+        j = i-1;
+
+        while(j >= 0 && value[j] > temp) {
+            value[j+1] = value[j];
+            j--;
         }
+        value[j+1] = temp;
     }
 }
 
