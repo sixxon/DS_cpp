@@ -8,19 +8,28 @@
 
 using namespace std;
 
+#define MAX 1000
+int temp[MAX];
+
 /* ******************************************************* */
 /*                     Basic functions                     */
 /* ******************************************************* */
 
 //"Array" constructor function: Dynamically allocate the array "value" with "size"
 Array::Array(int s) {
-    value = new int[s] {0};
-    size = s;
+    if(s <= MAX) {
+        value = new int[s] {0};
+        size = s;
+    }
+    else {
+        value = NULL;
+        size = 0;
+    }
 }
 
 //"~Array" destructor function: Delete the memory of this ADT
 Array::~Array() {
-    std::cout << "Delete array class completely!" << endl;
+    cout << "Delete array class completely!" << endl;
     delete value;
 }
 
@@ -37,15 +46,15 @@ int Array::init(int n) {
     //If n=2, manually initialize values of the array
     else if(n == 2) {
         for(int i=0; i<size; i++) {
-            std::cout << "Please input the #" << i+1 << " value of the array: ";
-            std::cin >> value[i];
+            cout << "Please input the #" << i+1 << " value of the array: ";
+            cin >> value[i];
             //Note that this code doesn't check the range of input value!
         }
         return 0;
     }
 
     else {
-        std::cout << "Wrong input type!" << endl;
+        cout << "Wrong input type!" << endl;
         return 1;
     }
 }
@@ -58,8 +67,8 @@ int Array::length() {
 //"print" function: Print elements of the array
 void Array::print() {
     for(int i=0; i<size; i++)
-        std::cout << value[i] << "\t";
-    std::cout << "\n";
+        cout << value[i] << "\t";
+    cout << "\n";
 }
 
 
@@ -74,7 +83,7 @@ void Array::swap(int index1, int index2) {
     return;
 }
 
-//"bubble_sort" function: Do bubble sorting on the array
+//"bubble_sort" function: Do bubble sort
 void Array::bubble_sort() {
     int temp;
     //i: base index, j: remainder index
@@ -87,7 +96,7 @@ void Array::bubble_sort() {
     }
 }
 
-//"select_sort" function: Do selection sorting on the array
+//"select_sort" function: Do selection sort
 void Array::select_sort() {
     int index, temp;
     //i: ith smallest index, j: unsorted element's index
@@ -102,7 +111,7 @@ void Array::select_sort() {
     }
 }
 
-//"insert_sort" function: Do insertion sorting on the array
+//"insert_sort" function: Do insertion sort
 void Array::insert_sort() {
     int j, temp;
     //i: unsorted element's index, j: sorted element's index
@@ -118,53 +127,48 @@ void Array::insert_sort() {
     }
 }
 
-//"merge_sort" function: Do merge sorting on the array recursively
-Array* Array::merge_sort(Array* arr, int start, int end) {
-    //If the size of the array is 1, return the array
-    if(start == end-1) {
-        Array* arr_part = new Array(1);
-        arr_part->value[0] = arr->value[start];
-        return arr_part;
-    }
-    //If the size of the array is bigger than 1, divide the array into subarray and merge
-    else {
-        Array* arr_part1 = merge_sort(arr, start, (start+end)/2);
-        Array* arr_part2 = merge_sort(arr, (start+end)/2, end);
-        return merge(arr_part1, arr_part2);
-    }
+//"merge_sort" function: Do merge sort
+void Array::merge_sort(int start, int end) {
+    if(start == end-1) return;
+
+    int mid = (start+end)/2;
+    merge_sort(start, mid);
+    merge_sort(mid, end);
+    merge(start, mid, end);
 }
 
-//"merge" function: Sort two arrays as they merge
-Array* Array::merge(Array* arr1, Array* arr2) {
-    Array* arr_merge = new Array(arr1->size + arr2->size);
-    int i = 0, j = 0, k = 0;
+//"merge" function: Sort the array as they merge
+void Array::merge(int left, int mid, int right) {
+    //i: left subarray's index, j: right subarray's index, k: temp array's index
+    int i=left, j=mid, k=left;
 
-    //i: the index of arr1, j: the index of arr2, k: the index of arr_merge
-    //Push the smaller value into arr_merge
-    while((i!=arr1->size) && (j!=arr2->size) && (k!=arr_merge->size)) {
-        if(arr1->value[i] < arr2->value[j]) {
-            arr_merge->value[k] = arr1->value[i];
-            i+=1; k+=1;
+    //Put the smallest value into the temp array
+    while(i < mid && j < right) {
+        if(value[i] < value[j]) {
+            temp[k++] = value[i++];
         }
         else {
-            arr_merge->value[k] = arr2->value[j];
-            j+=1; k+=1;
+            temp[k++] = value[j++];
         }
     }
 
-    if(i<arr1->size) {
-        for(i; i<arr1->size; i++, k++)
-            arr_merge->value[k] = arr1->value[i];
+    //Put remaining elements into the temp array
+    if(i < mid) {
+        for(i; i<mid; i++)
+            temp[k++] = value[i];
     }
-    else if(j<arr2->size) {
-        for(j; j<arr2->size; j++, k++)
-            arr_merge->value[k] = (arr2->value[j]);
+    else if(j < right) {
+        for(j; j<right; j++)
+            temp[k++] = value[j];
     }
 
-    return arr_merge;
+    for(k=left; k<right; k++)
+        value[k] = temp[k];
+
+    return;
 }
 
-//"quick_sort" function: Do quick sorting on the array recursively
+//"quick_sort" function: Do quick sort
 void Array::quick_sort(int pivot, int start, int end) {
     int left = start, right = end;
 

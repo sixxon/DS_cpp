@@ -32,8 +32,8 @@ int main() {
     cout << "Merge sort\n";
     a4.init(1);
     a4.print();
-    Array* a6 = a4.merge_sort(&a4, 0, a4.length());
-    a6->print();
+    a4.merge_sort(0, a4.length());
+    a4.print();
     cout << "\n\n";
 
     cout << "Quick sort\n";
