@@ -1,23 +1,19 @@
-//sort.cpp: Include the definition of Array's member functions
-//Github: sioni322, Email: sioni322@naver.com
+//sort.cpp, Sion Lee
+/* *****************************************************************************
+This source code includes definitions of the Array class's member functions.
+***************************************************************************** */
 
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
 #include "sort.h"
-
 using namespace std;
 
-#define MAX 1000
-int temp[MAX];
+int temp[ARRAY_LENGTH_MAX]; //Used for merge sort
 
-/* ******************************************************* */
-/*                     Basic functions                     */
-/* ******************************************************* */
-
-//"Array" constructor function: Dynamically allocate the array "value" with "size"
+//"Array" function: Dynamically allocate the array "value" with "size"
 Array::Array(int s) {
-    if(s <= MAX) {
+    if(s <= ARRAY_LENGTH_MAX) {
         value = new int[s] {0};
         size = s;
     }
@@ -27,34 +23,30 @@ Array::Array(int s) {
     }
 }
 
-//"~Array" destructor function: Delete the memory of this ADT
+//"~Array" function: Delete the memory of this object
 Array::~Array() {
-    cout << "Delete array class completely!" << endl;
     delete value;
 }
 
 //"init" function: Initialize values into the array according to the variable 'n'(1: random, 2: user input)
 int Array::init(int n) {
-    //If n=1, automatically initialize values of the array
+    //If n==1, automatically initialize values of the array
     if(n == 1) {
         srand(time(NULL));
         for(int i=0; i<size; i++) {
-            value[i] = rand() % 100 + 1;
+            value[i] = rand() % ARRAY_ELEM_MAX + 1;
         }
         return 0;
     }
-    //If n=2, manually initialize values of the array
+    //If n==2, manually initialize values of the array
     else if(n == 2) {
         for(int i=0; i<size; i++) {
             cout << "Please input the #" << i+1 << " value of the array: ";
             cin >> value[i];
-            //Note that this code doesn't check the range of input value!
         }
         return 0;
     }
-
     else {
-        cout << "Wrong input type!" << endl;
         return 1;
     }
 }
@@ -71,26 +63,15 @@ void Array::print() {
     cout << "\n";
 }
 
-
-/* ******************************************************* */
-/*                   Sorting functions                     */
-/* ******************************************************* */
-
-void Array::swap(int index1, int index2) {
-    int temp = value[index1];
-    value[index1] = value[index2];
-    value[index2] = temp;
-    return;
-}
-
 //"bubble_sort" function: Do bubble sort
 void Array::bubble_sort() {
-    int temp;
     //i: base index, j: remainder index
+    int temp;
+
     for(int i=0; i<size; i++) {
         for(int j=i+1; j<size; j++) {
             if(value[i] > value[j]) {
-                swap(i, j);
+                swap(value[i], value[j]);
             }
         }
     }
@@ -98,23 +79,24 @@ void Array::bubble_sort() {
 
 //"select_sort" function: Do selection sort
 void Array::select_sort() {
-    int index, temp;
     //i: ith smallest index, j: unsorted element's index
+    int index, temp;
+
     for(int i=0; i<size; i++) {
         index = i;
         for(int j=i+1; j<size; j++) {
             if(value[index] > value[j])
                 index = j;
         }
-        //Do swap
-        swap(i, index);
+        swap(value[i], value[index]);
     }
 }
 
 //"insert_sort" function: Do insertion sort
 void Array::insert_sort() {
-    int j, temp;
     //i: unsorted element's index, j: sorted element's index
+    int j, temp;
+
     for(int i=1; i<size; i++) {
         temp = value[i];
         j = i-1;
@@ -129,7 +111,9 @@ void Array::insert_sort() {
 
 //"merge_sort" function: Do merge sort
 void Array::merge_sort(int start, int end) {
-    if(start == end-1) return;
+    if(start == end-1) {
+        return;
+    }
 
     int mid = (start+end)/2;
     merge_sort(start, mid);
@@ -154,16 +138,19 @@ void Array::merge(int left, int mid, int right) {
 
     //Put remaining elements into the temp array
     if(i < mid) {
-        for(i; i<mid; i++)
+        for(i; i<mid; i++) {
             temp[k++] = value[i];
+        }
     }
     else if(j < right) {
-        for(j; j<right; j++)
+        for(j; j<right; j++) {
             temp[k++] = value[j];
+        }
     }
 
-    for(k=left; k<right; k++)
+    for(k=left; k<right; k++) {
         value[k] = temp[k];
+    }
 
     return;
 }
@@ -182,7 +169,7 @@ void Array::quick_sort(int pivot, int start, int end) {
                 if(right == pivot)
                     pivot = left;
 
-                swap(left, right);
+                swap(value[left], value[right]);
                 left += 1; right -= 1;
             }
             //If left&right index need to search next elements
@@ -200,7 +187,7 @@ void Array::quick_sort(int pivot, int start, int end) {
         }
         //Swap the small value(value[right]) and pivot value(value[pivot])
         if(value[right] <= value[pivot]) {
-            swap(right, pivot);
+            swap(value[right], value[pivot]);
             pivot = right;
         }
         
@@ -210,4 +197,33 @@ void Array::quick_sort(int pivot, int start, int end) {
     //If the number of elements in the array is 1, return
     else
         return;
+}
+
+void Array::heap_sort() {
+    //Build heap
+    for(int i=size/2-1; i>=0; i--) {
+        heapify_down(i, size);
+    }
+
+    //Heapify and swap
+    for(int i=size-1; i>=0; i--) {
+        swap(value[0], value[i]);
+        heapify_down(0, i);
+    }
+}
+
+void Array::heapify_down(int index, int range) {
+    int left = index*2+1, right = index*2+2, temp = index;
+
+    if(left < range && value[left] > value[temp]) {
+        temp = left;
+    }
+    if(right < range && value[right] > value[temp]) {
+        temp = right;
+    }
+
+    if(temp != index) {
+        swap(value[temp], value[index]);
+        heapify_down(temp, range);
+    }
 }

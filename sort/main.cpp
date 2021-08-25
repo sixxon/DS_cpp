@@ -1,12 +1,15 @@
-//main.cpp: Main function, made by Sion Lee
-//Github: sioni322, Email: sioni322@naver.com
+//main.cpp, Sion Lee
+/* *****************************************************************************
+This source code includes a main function.
+***************************************************************************** */
+
 #include <iostream>
 #include "sort.h"
 
 using namespace std;
 
 int main() {
-    Array a1(5), a2(5), a3(5), a4(5), a5(5);
+    Array a1(5), a2(5), a3(5), a4(5), a5(5), a6(5);
 
     cout << "Bubble sort\n";
     a1.init(1);
@@ -41,6 +44,13 @@ int main() {
     a5.print();
     a5.quick_sort(a5.length()-1/2, 0, a5.length()-1);
     a5.print();
+    cout << "\n\n";
+
+    cout << "Heap sort\n";
+    a6.init(1);
+    a6.print();
+    a6.heap_sort();
+    a6.print();
     cout << "\n\n";
 
     return 0;
