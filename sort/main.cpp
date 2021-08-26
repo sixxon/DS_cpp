@@ -5,7 +5,6 @@ This source code includes a main function.
 
 #include <iostream>
 #include "sort.h"
-
 using namespace std;
 
 int main() {

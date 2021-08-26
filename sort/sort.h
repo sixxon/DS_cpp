@@ -16,7 +16,8 @@ class Array {
     int size;       //The number of elements in the array
 
     public:
-    Array(int s);//복사생성자도 만들지 고민. Deep copy하게.
+    Array(int s);
+    Array(const Array &a);
     ~Array();
 
     int init(int n);

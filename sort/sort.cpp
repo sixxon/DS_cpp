@@ -1,6 +1,6 @@
 //sort.cpp, Sion Lee
 /* *****************************************************************************
-This source code includes definitions of the Array class's member functions.
+This source code includes definitions of Array class's member functions.
 ***************************************************************************** */
 
 #include <iostream>
@@ -21,6 +21,15 @@ Array::Array(int s) {
         value = NULL;
         size = 0;
     }
+}
+
+//"Array" function: Copy constructor which functions a deep copy
+Array::Array(const Array &a) {
+    value = new int[a.size];
+    size = a.size;
+    
+    for(int i=0; i<size; i++)
+        value[i] = a.value[i];
 }
 
 //"~Array" function: Delete the memory of this object

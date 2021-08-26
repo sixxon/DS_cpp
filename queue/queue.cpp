@@ -1,85 +1,149 @@
-//queue.cpp: Include definition of Queue's member functions
-//Github: sioni322, Email: sioni322@naver.com
+//queue.cpp, Sion Lee
+/* *****************************************************************************
+This source code includes definitions of Queue class's member functions.
+***************************************************************************** */
 
 #include <iostream>
 #include "queue.h"
-
 using namespace std;
 
 //"Queue" constructor function: Dynamically allocate the array with "s"
 Queue::Queue(int s) {
-    array = new int[s] ();
-
-    front = 0;
-    rear = 0;
-    size = s;
-    lastOp = 0;
+    if(s <= ARRAY_LENGTH_MAX && s > 0) {
+        array = new int[s] ();
+        capacity = s;
+    }
+    else {
+        array = 0;
+        capacity = 0;
+    }
+    length = 0;
+    first = 0;
+    last = 0;
 }
 
+//"Queue" function: Copy constructor which functions a deep copy
+Queue::Queue(const Queue &q) {
+    if(array)
+        delete[] array;
+
+    array = new int[q.capacity];
+    capacity = q.capacity;
+    length = q.length;
+    first = q.first;
+    last = q.last;
+
+    if(!isempty()) {
+        int i = first;
+        while(1) {
+            array[i] = q.array[i];
+            i = (i+1) % capacity;
+
+            if(i == last)
+                break;
+        }
+    }
+}
 
 //"~Queue" destructor function: Delete Queue class
 Queue::~Queue() {
-    cout << "Delete queue class completely!\n";
     delete array;
 }
 
-
-//"status" function: Return the status of queue array(empty:-1, enough space:0, full:1)
-int Queue::status() {
-    if(front == rear) {
-        if(lastOp == 0)
-            return -1; //Queue is Empty
-        else
-            return 1; //Queue is Full
-    }
-    else
-        return 0;
+//"front" function: Return the first element in Queue
+int Queue::front() {
+    return array[first];
 }
 
+//"back" function: Return the last elemenet in Queue
+int Queue::back() {
+    return array[(last == 0 ? capacity-1 : last-1)];
+}
 
-//"enqueue" function: Insert "value" into the queue array and return the status(0: complete, 1: failed)
-int Queue:: enqueue(int value) {
-    if(status() == 1) {
-        cout << "Cannot insert value into the queue!\n\n";
-        return -1;
+//"begin" function: Return the first element's address in Queue
+int* Queue::begin() {
+    return array+first;
+}
+
+//"end" function: Return the last element's address in Queue
+int* Queue::end() {
+    return array+last;
+}
+
+//"isempty" function: If the Queue is empty, return true. Else, return false.
+bool Queue::isempty() {
+    return (length == 0 ? true : false);
+}
+
+//"size" function: Return the length of the Queue
+int Queue::size() {
+    return length;
+}
+
+//"print" function: Print current status of this Queue
+void Queue::print() {
+    if(!isempty()) {
+        int i = first;
+
+        while(1) {
+            cout << array[i] << "\t";
+            i = (i+1) % capacity;
+
+            if(i == last)
+                break;
+        }
     }
-    else {
-        array[rear] = value;
-        rear = (rear + 1) % size;
-        lastOp = 1;
+    cout << "\nfirst: " << first << ", last: " << last << "\n";
+    cout << "size: " << length << ", capacity: " << capacity << "\n\n";
+}
 
-        return 0;
+//"push" function: Push the value into the Queue
+void Queue::push(int value) {
+    if(length == capacity) {
+        int *temp = new int[(length+1)*2] ();
+        int t = 0, i = first;
+
+        if(!isempty()) {
+            while(1) {
+                temp[t++] = array[i];
+                i = (i+1) % capacity;
+
+                if(i == last)
+                    break;
+            }
+        }
+        temp[t] = value;
+
+        if(array)
+            delete[] array;
+
+        array = temp;
+        length++;
+        capacity = length*2;
+        first = 0;
+        last = length;
+    }
+
+    else {
+        array[last] = value;
+        last = (last+1) % capacity;
+        length++;
     }
 }
 
-
-//"dequeue" function: Delete a value in queue array and return the value/status
-int Queue::dequeue() {
-    if(status() == -1) {
-        cout << "Cannot delete value in queue!\n\n";
-        return -1;
+//"pop" function: Pop the first value in the Queue
+int Queue::pop() {
+    if(!length) {
+        return 0;
     }
-    else {
-        int temp = array[front];
 
-        array[front] = 0;
-        front = (front + 1) % size;
-        lastOp = 0;
+    else {
+        int temp = front();
+
+        array[first] = 0;
+        first = (first+1) % capacity;
+        length--;
 
         return temp;
     }
-}
-
-
-//"print" function: Print current status of this queue
-void Queue::print() {
-    for(int i=0; i<this->size; i++) {
-        if(array[i] == 0) {
-            cout << "empty\t";
-        }
-        else {
-            cout << array[i] << "\t";
-        }
-    }
-    cout << "\nfront: " << front << ", rear: " << rear << "\n\n";
 }
