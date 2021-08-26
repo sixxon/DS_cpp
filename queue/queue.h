@@ -7,7 +7,7 @@ This header file includes the queue data structure using a normal array.
 #define DSCPP_QUEUE_H
 #define ARRAY_LENGTH_MAX 1000
 
-//Queue class functions like queue data structure(enqueue, dequeue, etc)
+//Queue class functions like queue data structure(push, pop, etc)
 class Queue {
     private:
     int *array;     //Array pointer
