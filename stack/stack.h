@@ -1,40 +1,40 @@
-//stack.h: Include Stack class definition
-//Github: sioni322, Email: sioni322@naver.com
+//stack.h, Sion Lee
+/* *****************************************************************************
+This header file includes the stack data structure using a normal array.
+***************************************************************************** */
 
-#ifndef __STACK__
-#define __STACK__
+#ifndef DSCPP_STACK_H
+#define DSCPP_STACK_H
+#define ARRAY_LENGTH_MAX 1000
 
+//Stack class functions like stack data structure(push_back, pop_back, etc)
 class Stack {
     private:
     int *array;     //Stack array
 
-    int top;        //Top index of the array
-    int size;       //Total size of the array
+    int length;     //The number of elements in the array(equals top)
+    int capacity;   //The size of the array
 
     public:
-    //"Stack" constructor function: Dynamically allocate the array with "s"
-    /* Parameter type: int, Return type: X */
     Stack(int s);
-
-    //"~Stack" destructor function: Delete the memory of Stack
-    /* Parameter type: void, Return type: X */
+    Stack(const Stack &s);
     ~Stack();
 
-    //"status" function: Return the status of stack array(empty:-1, enough space:0, full:1)
-    /* Parameter type: void, Return type: int */
-    int status();
+    int front();
+    int back();
+    int* begin();
+    int* end();
 
-    //"push" function: Insert the value into the stack array and return the status(0: complete, -1: failed)
-    /* Parameter type: int, Return type: int */
-    int push(int value);
-
-    //"pop" function: Delete a value in stack array and return the value/status
-    /* Parameter type: void, Return type: int */
-    int pop();
-
-    //"print" function: Print current status of this stack
-    /* Parameter type: void, Return type: void */
+    bool isempty();
+    int size();
     void print();
+
+    void push_back(int value);
+    int pop_back();
+
+    int operator[](const int &i) {
+        return array[i];
+    }
 };
 
 #endif
