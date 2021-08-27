@@ -1,168 +1,142 @@
-//heap.cpp: Include definition of Heap's member functions
-//Github: sioni322, Email: sioni322@naver.com
+//heap.cpp, Sion Lee
+/* *****************************************************************************
+This source code includes definitions of Heap class's member functions.
+***************************************************************************** */
 
 #include "heap.h"
-
+#include <iostream>
 using namespace std;
 
-//Constructor and destructor functions
-/* "Heap" constructor function: Make a new heap */
-Heap::Heap(int s, bool maxmin) {
-    array = new int[s] {0};
-    
-    size = 0;
-    capacity = s;
-    isMax = maxmin;
+//"Heap" constructor function: Dynamicall allocate the array with "s"
+Heap::Heap(int s, bool m) {
+    if(s <= ARRAY_LENGTH_MAX && s > 0) {
+        array = new int[s] ();
+        capacity = s;
+    }
+    else {
+        array = 0;
+        capacity = 0;
+    }
+    length = 0;
+    ismax = m;
 }
 
-/* "~Heap" destructor function: Delete a heap */
+//"Heap" function: Copy constructor which functions a deep copy
+Heap::Heap(const Heap &h) {
+    if(array)
+        delete[] array;
+
+    array = new int[h.capacity];
+    capacity = h.capacity;
+    length = h.length;
+    ismax = h.ismax;
+
+    for(int i=0; i<length; i++) {
+        array[i] = h.array[i];
+    }
+}
+
+//"~Heap" destructor function: Delete Heap class
 Heap::~Heap() {
     delete array;
 }
 
-
-
-//Parameter functions
-/* "length" function: Return the length of the heap array */
-int Heap::length() {
-    return size;
+//"top" function: Return the first element in the Heap
+int Heap::top() {
+    return (length > 0 ? array[0] : 0);
 }
 
-/* "depth" function: Return the depth of the heap */
-int Heap::depth() {
-    return log2(size)+1;
+//"isempty" function: If the Heap is empty, return true. Else, return false.
+bool Heap::isempty() {
+    return (length == 0 ? true : false);
 }
 
-/* "maxmin" function: Return the status of max/min */
-bool Heap::maxmin() {
-    return isMax;
+//"size" function: Return the length of the Heap
+int Heap::size() {
+    return length;
 }
 
-
-
-//Basic functions
-/* "insert" function: Insert a new node into the heap */
-int Heap::insert(int v) {
-    //If the array is full, reallocate and copy
-    if(size == capacity) {
-        capacity += capacity / 2;
-        int *newarray = new int[capacity] {0};
-
-        copy(array, array+size, newarray);
-
-        delete array;
-        array = newarray;
-    }
-
-    //Insert new node into the end of the heap
-    array[size] = v;
-    int child = size;
-
-    //Compare the parent node's value to the child node's value and swap
-    while(size && child) {
-        int parent = (child+1)/2-1;
-
-        //Compare and swap
-        if((isMax == MAX && array[parent] < array[child]) || (isMax == MIN && array[parent] > array[child])) {
-            swap(array[child], array[parent]);
-            child = (child+1)/2-1;
-        }
-        else
-            break;
-    }
-
-    size += 1;
-    return 0;
-}
-
-/* "remove" function: Remove a root node from the heap */
-int Heap::remove() {
-    //If the heap is empty, return
-    if(!size)
-        return 1;
-
-    //Delete a root node and swap with last node
-    array[0] = 0;
-    swap(array[0], array[size-1]);
-    size -= 1;
-
-    int parent = 0;
-
-    //Compare the parent node's value to the child node's value and swap
-    while(1) {
-        int child;
-        int odd = parent*2+1;
-        int even = parent*2+2;
-
-        //Check out the range of child nodes
-        if(odd > size-1)
-            break;
-        
-        else if(even > size-1)
-            child = odd;
-        
-        //If "parent" node has two children nodes, find the appropriate node
-        else {
-            if((isMax == MAX && array[odd] > array[even]) || (isMax == MIN) && array[odd] < array[even])
-                child = odd;
-            else
-                child = even;
-        }
-
-        //Compare and swap
-        if((isMax == MAX && array[parent] < array[child]) || (isMax == MIN && array[parent] > array[child])) {
-            swap(array[child], array[parent]);
-            parent = child;
-        }
-        else
-            break;
-    }
-
-    return 0;
-}
-
-/* "number" function: Return the number of node which has a value "v" */
-int Heap::number(int v) {
-    for(int i=0; i<size; i++) {
-        if(array[i] == v)
-            return i;
-    }
-
-    return -1;
-}
-
-/* "value" function: Return the value of nth node */
-int Heap::value(int n) {
-    if(n > size || n < 0)
-        return -1;
-
-    return array[n];
-}
-
-/* "print" function: Print the heap nodes */
+//"print" function: Print current status of this Heap
 void Heap::print() {
-    if(!size)
+    if(!isempty()) {
+        for(int i=0; i<length; i++) {
+            cout << array[i] << "\t";
+        }
+    }
+    cout << "\nsize: " << length << "\n\n";
+}
+
+//"heapify_up" function: Do heapify with a upper direction
+void Heap::heapify_up(int index) {
+    if(index == 0)
         return;
-        
-    if(isMax)
-        std::cout << "[Max ";
-    else
-        std::cout << "[Min ";
+    else {
+        int parent = index/2;
 
-    std::cout << "heap status]\n";
-    std::cout << "-----------------------------------------------------\n";
-    
+        if((ismax && array[index] > array[parent]) || (!ismax && array[index] < array[parent])) {
+            swap(array[index], array[parent]);
+            heapify_up(parent);
+        }
+    }
+}
 
-    for(int i=0; i<size; i++) {
-        std::cout << array[i];
-        if(floor(log2(i+1)) < floor(log2(i+2)))
-            std::cout << "\n";
-        else
-            std::cout << "\t";
+//"heapify_down" function: Do heapify with a lower direction
+void Heap::heapify_down(int index) {
+    int left = index*2+1, right = index*2+2, temp = index;
+
+    if((ismax && left < length && array[temp] < array[left]) || (!ismax && left < length && array[temp] > array[left])) {
+        temp = left;
+    }
+    if((ismax && right < length && array[temp] < array[right]) || (!ismax && right < length && array[temp] > array[right])) {
+        temp = right;
     }
 
-    std::cout << "\n\n-The number of nodes: " << size << "\n";
-    std::cout << "-Heap depth: " << depth() << "\n";
-    std::cout << "-Heap capacity: " << capacity << "\n";
-    std::cout << "-----------------------------------------------------\n";
+    if(temp != index) {
+        swap(array[index], array[temp]);
+        heapify_down(temp);
+    }
+}
+
+//"push" function: Push the value into the Heap
+void Heap::push(int value) {
+    if(length == capacity) {
+        int *temp = new int[(length+1)*2] ();
+        
+        for(int i=0; i<length; i++) {
+            temp[i] = array[i];
+        }
+        temp[length] = value;
+
+        if(array)
+            delete[] array;
+
+        array = temp;
+        length++;
+        capacity = length*2;
+    }
+
+    else {
+        array[length++] = value;
+    }
+
+    heapify_up(length-1);
+}
+
+//"pop" function: Pop the first value in the Heap
+int Heap::pop() {
+    if(!length) {
+        return 0;
+    }
+
+    else {
+        int temp = top();
+
+        array[0] = 0;
+        swap(array[0], array[length-1]);
+        length--;
+
+        heapify_down(0);
+
+        return temp;
+    }
 }

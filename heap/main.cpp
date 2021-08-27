@@ -1,34 +1,23 @@
-//main.cpp: Main function, made by Sion Lee
-//Github: sioni322, Email: sioni322@naver.com
+//main.cpp, Sion Lee
+/* *****************************************************************************
+This source code includes a main function.
+***************************************************************************** */
 
 #include <iostream>
 #include "heap.h"
-
 using namespace std;
 
 int main() {
-    Heap maxheap(5);
-    Heap minheap(5, 0);
+    Heap max(5), min(5, false);
 
-    maxheap.insert(6); minheap.insert(6);
-    maxheap.insert(10); minheap.insert(10);
-    maxheap.insert(3); minheap.insert(3);
-    maxheap.insert(4); minheap.insert(4);
-    maxheap.insert(5); minheap.insert(5);
-    maxheap.insert(3); minheap.insert(3);
+    max.push(1); min.push(1);
+    max.push(2); min.push(2);
+    max.push(3); min.push(3);
+    max.push(4); min.push(4);
+    max.print(); min.print();
 
-    maxheap.print();
-    std::cout << "\n\n";
-    minheap.print();
-    std::cout << "\n\n";
-
-    maxheap.remove(); minheap.remove();
-    maxheap.remove(); minheap.remove();
-
-    maxheap.print();
-    std::cout << "\n\n";
-    minheap.print();
-    std::cout << "\n\n";
+    max.pop(); min.pop();
+    max.print(); min.print();
 
     return 0;
 }
