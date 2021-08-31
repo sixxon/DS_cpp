@@ -1,53 +1,46 @@
-//tree.cpp: Include definition of Tree's member functions
-//Github: sioni322, Email: sioni322@naver.com
+//tree.cpp, Sion Lee
+/* *****************************************************************************
+This source code includes definitions of Tree class's member functions.
+***************************************************************************** */
 
+#include <iostream>
+#include <queue>
 #include "tree.h"
-
 using namespace std;
 
-//Constructor and destructor functions
-/* "Tree" constructor function: Make a new binary tree */
+//"Tree" constructor function: Make a new binary tree
 Tree::Tree(bool bst) {
     root = NULL;
-
     total = 0;
-    maxnum = 0;
+    number = 0;
     isBst = bst;
 }
 
-/*"~Tree" destructor function: Delete a binary tree */
+//"~Tree" destructor function: Delete a binary tree
 Tree::~Tree() {
     delete root;
 }
 
-
-
-//Tree parameter functions
-/* "rootnode" function: Return the address of the root node */
-Node* Tree::rootnode() {
+//"begin" function: Return the address of the root node
+Node* Tree::begin() {
     return root;
 }
 
-/* "totalnode" function: Return the total number of nodes in this tree */
-int Tree::totalnode() {
+//"size" function: Return the total number of nodes in this tree
+int Tree::size() {
     return total;
 }
 
-
-
-
-//Basic functions
-/* "insert" function: Insert a node into the tree and return the status(0: complete, 1: failed) */
-int Tree::insert(int n, int v, bool leftright) {
+//"insert" function: Insert a node into the tree
+void Tree::insert(int n, int v, bool leftright) {
     if(isBst)
-        return 1;
+        return;
 
-    Node* child = new Node(v, maxnum+1);
+    Node* child = new Node(v, number+1);
     Node* parent;
     
-    //If the allocation of a child node is failed
     if(child == NULL)
-        return 1;
+        return;
     
     //If the tree is empty
     if(root == NULL) {
@@ -57,31 +50,26 @@ int Tree::insert(int n, int v, bool leftright) {
     else {
         parent = find(n);
 
-        //If we failed to find the parent node which has number "n"
-        //Or, if the child node already exists
         if((parent == NULL) || (leftright==LEFT && parent->node_left() != NULL) || (leftright==RIGHT && parent->node_right() != NULL)) {
             delete child;
-            return 1;
+            return;
         }
         parent->modify_addr(child, leftright);
     }
 
     total += 1;
-    maxnum += 1;
-    return 0;
+    number += 1;
 }
 
-/* "insert_bst" function: Insert a node into bst and return the status(0: complete, 1: failed) */
-int Tree::insert_bst(int v) {
-    //This method can be done in the bst only!
+//"insert_bst" function: Insert a node into bst
+void Tree::insert_bst(int v) {
     if(!isBst)
-        return 1;
+        return;
 
-    Node* child = new Node(v, maxnum+1);
+    Node* child = new Node(v, number+1);
 
-    //If the allocation of a child node is failed
     if(child == NULL)
-        return 1;
+        return;
 
     //If the tree is empty
     if(root == NULL) {
@@ -96,7 +84,7 @@ int Tree::insert_bst(int v) {
             //If the value "v" equals parent node's value
             if(parent->node_value() == v) {
                 delete child;
-                return 1;
+                return;
             }
             //If the value "v" is lesser than the parent node's value
             else if(parent->node_value() > v) {
@@ -119,15 +107,13 @@ int Tree::insert_bst(int v) {
     }
 
     total += 1;
-    maxnum += 1;
-    return 0;
+    number += 1;
 }
 
-/* "remove_bst" function: Remove the node which has the value "v" in the bst and return the status(0: complete, 1: failed) */
-int Tree::remove_bst(int v) {
-    //This method can be done in the bst only!
+//"remove_bst" function: Remove the node which has the value "v" in the bst
+void Tree::remove_bst(int v) {
     if(!isBst)
-        return 1;
+        return;
     
     Node* parent = root;
     Node* child;
@@ -141,7 +127,6 @@ int Tree::remove_bst(int v) {
 
     //Else, find the node to be deleted
     else {
-        //Find the node to be deleted
         while(1) {
             //If the value "v" is lesser than the parent node's value
             if(parent->node_value() > v && parent->node_left() != NULL) {
@@ -163,7 +148,7 @@ int Tree::remove_bst(int v) {
             }
             //If we didn't find the appropriate node, return
             else
-                return 1;
+                return;
         }
     }
 
@@ -231,14 +216,11 @@ int Tree::remove_bst(int v) {
 
     delete child;
     total -= 1;
-
-    return 0;
 }
 
-/* "find" function: Find the node whose number is "n" and return its address */
+//"find" function: Find the node whose number is "n" and return its address
 Node* Tree::find(int n) {
-    //If the number "n" is out of range
-    if(n > maxnum || n < 0)
+    if(n > number || n < 0)
         return NULL;
 
     Node* node = root;
@@ -247,11 +229,9 @@ Node* Tree::find(int n) {
 
     //Find the node which has number "n"
     while(count < total) {
-        //If we found the node, return
         if(node->node_number() == n) {
             return node;
         }
-        //Else, continue
         else {
             if(node->node_left() != NULL)
                 queue.push(node->node_left());
@@ -269,36 +249,30 @@ Node* Tree::find(int n) {
     return NULL;
 }
 
-/* "find_bst" function: Find the node which has the value "v" in bst and return its address */
+//"find_bst" function: Find the node which has the value "v" in bst and return its address
 Node* Tree::find_bst(int v) {
-    //This method can be done in the bst only!
     if(!isBst)
         return NULL;
     
     Node* node = root;
 
     while(1) {
-        //If the node is NULL, return NULL
         if(node == NULL)
             return NULL;
-        //If the node's value equals v, return
         else if(node->node_value() == v) {
             return node;
         }
-        //If the value "v" is lesser than node's value
         else if(node->node_value() > v) {
             node = node->node_left();
         }
-        //If the value "v" is larger than node's value
         else {
             node = node->node_right();
         }
     }
 }
 
-/* "max_bst" function: Find the node which has the maximum value in the bst and return its parent's address */
+//"max_bst" function: Find the node which has the maximum value in the bst and return its parent's address
 Node* Tree::max_bst(Node* start, Node*& max) {
-    //This method can be done in the bst only!
     if(!isBst) {
         return NULL;
     }
@@ -325,19 +299,19 @@ Node* Tree::max_bst(Node* start, Node*& max) {
     }
 }
 
-/* "print" function: Print the tree */
+//"print" function: Print the tree
 void Tree::print() {
     Node* node = root;
     queue<Node*> queue;
     int count = 0;
 
     while(count < total) {
-        std::cout << node->node_number() << "# node's value: " << node->node_value() << "\t";
+        cout << node->node_number() << "# node's value: " << node->node_value() << "\t";
         if(node->node_left() != NULL)
-            std::cout << "left #: " << node->node_left()->node_number() << "  ";
+            cout << "left #: " << node->node_left()->node_number() << "  ";
         if(node->node_right() != NULL)
-            std::cout << "right #: " << node->node_right()->node_number();
-        std::cout << "\n";
+            cout << "right #: " << node->node_right()->node_number();
+        cout << "\n";
 
 
         if(node->node_left() != NULL)
@@ -357,7 +331,7 @@ void Tree::print() {
 
 
 
-/* "infix" function: Search nodes based on the infix notation */
+//"infix" function: Search nodes based on the infix notation
 void Tree::infix(Node* node, vector<int>& result) {
     if(node == NULL)
         return;
@@ -369,7 +343,7 @@ void Tree::infix(Node* node, vector<int>& result) {
     return;
 }
 
-/* "postfix" function: Search nodes based on the postfix notation */
+//"postfix" function: Search nodes based on the postfix notation
 void Tree::postfix(Node* node, vector<int>& result) {
     if(node == NULL)
         return;
@@ -381,7 +355,7 @@ void Tree::postfix(Node* node, vector<int>& result) {
     return;
 }
 
-/* "prefix" function: Search nodes based on the prefix notation */
+//"prefix" function: Search nodes based on the prefix notation
 void Tree::prefix(Node* node, vector<int>& result) {
     if(node == NULL)
         return;

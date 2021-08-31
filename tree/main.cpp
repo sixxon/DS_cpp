@@ -1,9 +1,10 @@
-//main.cpp: Main function, made by Sion Lee
-//Github: sioni322, Email: sioni322@naver.com
+//main.cpp, Sion Lee
+/* *****************************************************************************
+This source code includes a main function.
+***************************************************************************** */
 
 #include <iostream>
 #include "tree.h"
-
 using namespace std;
 
 int main() {
@@ -11,7 +12,6 @@ int main() {
     Tree t(0);
     std::cout << "************************** Binary tree **************************\n";
 
-    //Do insert
     t.insert(0, 50, 0);
     t.insert(1, 150, 1);
     t.insert(1, 25, 0);
@@ -23,19 +23,15 @@ int main() {
     t.print();
     std::cout << "\n\n";
 
-
-    //Find 5th node
     std::cout << "After finding 5th node: \n";
     std::cout << t.find(5) << endl;
     std::cout << "\n\n";
 
-
-    //Do infix, postfix, prefix search
     vector<int> result1, result2, result3;
 
-    t.infix(t.rootnode(), result1);
-    t.postfix(t.rootnode(), result2);
-    t.prefix(t.rootnode(), result3);
+    t.infix(t.begin(), result1);
+    t.postfix(t.begin(), result2);
+    t.prefix(t.begin(), result3);
 
     std::cout << "Infix order: \n";
     for(int i=0; i<result1.size(); i++)
@@ -57,7 +53,6 @@ int main() {
     Tree bst(1);
     std::cout << "\n\n*********************** Binary search tree ***********************\n";
 
-    //Do insert
     bst.insert_bst(10);
     bst.insert_bst(7);
     bst.insert_bst(15);
@@ -69,14 +64,10 @@ int main() {
     bst.print();
     std::cout << "\n\n";
 
-
-    //Find the node which has value 7
     std::cout << "After finding the node which has a value 7: \n";
     std::cout << bst.find_bst(7) << endl;
     std::cout << "\n\n";
 
-
-    //Delete the node
     std::cout << "After deleting the root node: \n";
     bst.remove_bst(10);
     bst.print();

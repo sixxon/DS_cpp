@@ -1,26 +1,26 @@
-//node.h: Include Node class definition
-//Github: sioni322, Email: sioni322@naver.com
+//node.h, Sion Lee
+/* *****************************************************************************
+This header file includes the node information for the tree.
+***************************************************************************** */
 
-#ifndef __NODE__
-#define __NODE__
+#ifndef DSCPP_NODE_H
+#define DSCPP_NODE_H
 
+#include <iostream>
 #define LEFT 0
 #define RIGHT 1
 
-#include <iostream>
-
-using namespace std;
-
+//Node class is used for tree
 class Node {
     private:
-    int value;          //Current node's value
-    int number;         //Current node's number
+    int value;          //Node's value
+    int number;         //Current node number
 
-    Node* leftchild;    //Left child node's pointer
-    Node* rightchild;   //Right child node's pointer
+    Node* leftchild;    //Left child node's address
+    Node* rightchild;   //Right child node's address
 
     public:
-    /* "Node" instructor function: Make a new node */
+    //"Node" instructor function: Make a new node
     Node(int v, int n) {
         value = v;
         number = n;
@@ -29,33 +29,33 @@ class Node {
         rightchild = NULL;
     }
 
-    /* "~Node" destructor function: Delete the node */
+    //"~Node" destructor function: Delete the node
     ~Node() {
         delete leftchild;
         delete rightchild;
     }
 
-    /* "node_value" function: Return the value of this node */
+    //"node_value" function: Return the value of this node
     int node_value() {
         return value;
     }
 
-    /* "node_number" function: Return the number of this node */
+    //"node_number" function: Return the number of this node
     int node_number() {
         return number;
     }
 
-    /* "node_left" function: Return the left child node's address */
+    //"node_left" function: Return the left child node's address
     Node* node_left() {
         return leftchild;
     }
 
-    /* "node_right" function: Return the right child node's address */
+    //"node_right" function: Return the right child node's address
     Node* node_right() {
         return rightchild;
     }
 
-    /* "modify_left" function: Modify the left child node's address */
+    //"modify_left" function: Modify the child node's address
     void modify_addr(Node* node, bool child) {
         if(child==LEFT) {
             leftchild = node;
