@@ -18,6 +18,7 @@ class Node {
 
     int element();
     Node* next_address();
+    
     void modify_element(int v);
     void modify_address(Node* n);
 

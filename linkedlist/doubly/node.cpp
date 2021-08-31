@@ -1,21 +1,21 @@
-//node.cpp: Include definition of Node's member functions
-//Github: sioni322, Email: sioni322@naver.com
+//node.cpp, Sion Lee
+/* *****************************************************************************
+This source code includes definitions of Node class's member functions.
+***************************************************************************** */
 
 #include <iostream>
 #include "node.h"
-
 using namespace std;
 
-//"Node" constructor function: Initialize the node
+//"Node" constructor function: Initialize Node class
 Node::Node(int v) {
     value = v;
     prev = NULL;
     next = NULL;
 }
 
-//"~Node" destructor function: Delete the node
+//"~Node" destructor function: Delete Node class
 Node::~Node() {
-    std::cout << "Delete node!\n";
     delete next;
 }
 

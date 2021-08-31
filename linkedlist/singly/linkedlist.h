@@ -5,7 +5,6 @@ This header file includes the linked list data structure using nodes.
 
 #ifndef DSCPP_LINKEDLIST_H
 #define DSCPP_LINKEDLIST_H
-
 #include "node.h"
 
 class LinkedList{

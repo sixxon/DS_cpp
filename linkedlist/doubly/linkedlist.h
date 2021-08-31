@@ -1,46 +1,29 @@
-//linkedlist.h: Include LinkedList class definition (For doubly linked list & circular linked list)
-//Github: sioni322, Email: sioni322@naver.com
+//linkedlist.h, Sion Lee
+/* *****************************************************************************
+This header file includes the doubly linked list data structure using nodes.
+***************************************************************************** */
 
-#ifndef __LINKEDLIST__
-#define __LINKEDLIST__
-
+#ifndef DSCPP_LINKEDLIST_H
+#define DSCPP_LINKEDLIST_H
 #include "node.h"
 
 class LinkedList{
     private:
-    Node* start;        //Point out the start node
+    Node* start;        //The start node of the linked list
+    int size;           //The number of nodes
 
-    int size;           //Include the number of nodes
-    bool isCircular;    //Flag bit of circular linked list (0: non-circular, 1: circular)
+    bool isCircular;    //If true, circular linked list.
 
     public:
-    //"LinkedList" constructor function: Initialize the member variables
-    /* Parameter type: bool, Return type: X */
     LinkedList(bool b=0);
-
-    //"~LinkedList" destructor function: Delete all of the nodes in the linked list
-    /* Parameter type: X, Return type: X */
     ~LinkedList();
 
-    //"isEmpty" function: Return the status of the linked list (0: empty, 1: not empty)
-    /* Parameter type: void, Return type: int */
-    int isEmpty();
-
-    //"insert" function: Insert the value into the linked list and return the status (0: completed 1: failed)
-    /* Parameter type: int, Return type: int */
-    int insert(int value);
-
-    //"remove" function: Remove the leftmost node which has "value" from the linked list and return the status (0: completed 1: failed)
-    /* Parameter type: int, Return type: int */
-    int remove(int value);
-
-    //"find" function: Find out the leftmost node which has the "value" and return its node's address
-    /* Parameter type: int, Return type: Node* */
-    Node* find(int value);
-
-    //"print" function: Print the values in the linked list
-    /* Parameter type: void, Return type: void */
+    bool isEmpty();
     void print();
+
+    void insert(int value);
+    void remove(int value);
+    Node* find(int value);
 };
 
 #endif
