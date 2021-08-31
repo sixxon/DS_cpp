@@ -1,9 +1,10 @@
-//linkedlist.cpp: Include definition of LinkedList's member functions
-//Github: sioni322, Email: sioni322@naver.com
+//linkedlist.cpp, Sion Lee
+/* *****************************************************************************
+This source code includes definitions of LinkedList class's member functions.
+***************************************************************************** */
 
 #include <iostream>
 #include "linkedlist.h"
-
 using namespace std;
 
 //"LinkedList" constructor function: Initialize member variables
@@ -14,26 +15,25 @@ LinkedList::LinkedList() {
 
 //"~LinkedList" destructor function: Delete all of the nodes in the linked list
 LinkedList::~LinkedList() {
-    std::cout << "Delete linked list!\n";
     delete start;
 }
 
-//"isEmpty" function: Return the status of the linked list (0: empty, 1: not empty)
-int LinkedList::isEmpty() {
+//"isEmpty" function: If the linked list is empty, return true. Else, return false.
+bool LinkedList::isEmpty() {
     if(start == NULL)
-        return 0;
+        return true;
     else
-        return 1;
+        return false;
 }
 
-//"insert" function: Insert the value into the linked list and return the status (0: completed 1: failed)
-int LinkedList::insert(int value) {
+//"insert" function: Insert the value into the linked list
+void LinkedList::insert(int value) {
     Node* node = new Node(value);
 
     if(node == NULL)
-        return 1;
+        return;
 
-    if(!isEmpty()) {
+    if(isEmpty()) {
         start = node;
         size += 1;
     }
@@ -46,14 +46,12 @@ int LinkedList::insert(int value) {
         lastnode->modify_address(node);
         size += 1;
     }
-    return 0;
 }
 
-//"remove" function: Remove the leftmost node which has "value" from the linked list and return the status (0: completed 1: failed)
-int LinkedList::remove(int value) {
-    //If the linked list is empty
-    if(!isEmpty())
-        return 1;
+//"remove" function: Remove the leftmost node which has "value" from the linked list
+void LinkedList::remove(int value) {
+    if(isEmpty())
+        return;
 
     //If the first node has a "value"
     else if(start->element() == value) {
@@ -63,8 +61,6 @@ int LinkedList::remove(int value) {
 
         node->modify_address(NULL);
         delete node;
-
-        return 0;
     }
 
     //If there isn't a "value" in the first node, find the node which has a "value" and remove it
@@ -89,7 +85,7 @@ int LinkedList::remove(int value) {
 
         //If any node hasn't a "value", return
         if(i == size || node->next_address() == NULL) {
-            return 1;
+            return;
         }
         //If there is a node that has a "value", remove the node
         else {
@@ -99,8 +95,6 @@ int LinkedList::remove(int value) {
             prenode->modify_address(postnode);
             node->modify_address(NULL);
             delete node;
-
-            return 0;
         }
     }
 }

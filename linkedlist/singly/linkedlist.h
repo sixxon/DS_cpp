@@ -1,8 +1,10 @@
-//linkedlist.h: Include LinkedList class definition
-//Github: sioni322, Email: sioni322@naver.com
+//linkedlist.h, Sion Lee
+/* *****************************************************************************
+This header file includes the linked list data structure using nodes.
+***************************************************************************** */
 
-#ifndef __LINKEDLIST__
-#define __LINKEDLIST__
+#ifndef DSCPP_LINKEDLIST_H
+#define DSCPP_LINKEDLIST_H
 
 #include "node.h"
 
@@ -12,33 +14,15 @@ class LinkedList{
     int size;       //Include the number of nodes
 
     public:
-    //"LinkedList" constructor function: Initialize member variables
-    /* Parameter type: X, Return type: X */
     LinkedList();
-
-    //"~LinkedList" destructor function: Delete all of the nodes in the linked list
-    /* Parameter type: X, Return type: X */
     ~LinkedList();
 
-    //"isEmpty" function: Return the status of the linked list (0: empty, 1: not empty)
-    /* Parameter type: void, Return type: int */
-    int isEmpty();
-
-    //"insert" function: Insert the value into the linked list and return the status (0: completed 1: failed)
-    /* Parameter type: int, Return type: int */
-    int insert(int value);
-
-    //"remove" function: Remove the leftmost node which has "value" from the linked list and return the status (0: completed 1: failed)
-    /* Parameter type: int, Return type: int */
-    int remove(int value);
-
-    //"find" function: Find the value which is located in the linked list and return its node's address
-    /* Parameter type: int, Return type: Node* */
-    Node* find(int value);
-
-    //"print" function: Print the values in the linked list
-    /* Parameter type: void, Return type: void */
+    bool isEmpty();
     void print();
+
+    void insert(int value);
+    void remove(int value);
+    Node* find(int value);
 };
 
 #endif

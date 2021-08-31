@@ -1,10 +1,10 @@
-//main.cpp: Main function, made by Sion Lee
-//Github: sioni322, Email: sioni322@naver.com
+//main.cpp, Sion Lee
+/* *****************************************************************************
+This source code includes a main function.
+***************************************************************************** */
 
 #include <iostream>
-#include "node.h"
 #include "linkedlist.h"
-
 using namespace std;
 
 int main() {
